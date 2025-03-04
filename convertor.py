@@ -25,6 +25,10 @@ def convert_currency(value, from_currency, to_currency):
     rates = response.get("rates", {})
     return value * rates.get(to_currency, 1)
 
+def convert_time(value, from_unit, to_unit):
+    units = {"Seconds": 1, "Minutes": 1/60, "Hours": 1/3600, "Days": 1/86400}
+    return value * (units[to_unit] / units[from_unit])
+
 # Streamlit UI with Animated Sidebar
 st.set_page_config(page_title="Unit Converter", layout="centered")
 
@@ -51,7 +55,7 @@ st.markdown(
 
 # Sidebar Navigation
 st.sidebar.title("Unit Converter")
-category = st.sidebar.radio("Select Conversion Type", ["Length", "Weight", "Temperature", "Currency"])
+category = st.sidebar.radio("Select Conversion Type", ["Length", "Weight", "Temperature", "Currency", "Time"])
 
 # Conversion Logic
 st.title(f"{category} Converter")
@@ -70,6 +74,9 @@ elif category == "Temperature":
 elif category == "Currency":
     units = ["USD", "EUR", "GBP", "INR", "JPY", "CAD", "AUD"]
     convert_function = convert_currency
+elif category == "Time":
+    units = ["Seconds", "Minutes", "Hours", "Days"]
+    convert_function = convert_time
 
 from_unit = st.selectbox("From", units)
 to_unit = st.selectbox("To", units)
